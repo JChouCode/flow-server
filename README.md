@@ -1,3 +1,5 @@
 # flow-server
-GraphQL API and PostgreSQL for flow. 
+
+Backend server of Flow.
+
 Stack: Apollo Server, Prisma, Typescript, NodeJS
