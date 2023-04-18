@@ -15,5 +15,6 @@ model Task {
   title       String    @db.Text
   createdAt   DateTime  @default(now())
   completedAt DateTime?
+  duration    Int       @default(30) @db.SmallInt
   done        Boolean   @default(false)
 }

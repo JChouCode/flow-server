@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "duration" SMALLINT NOT NULL DEFAULT 30;

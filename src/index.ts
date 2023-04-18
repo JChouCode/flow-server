@@ -43,10 +43,13 @@ const typeDefs = `#graphql
 
     type Query {
         todo: [Task]
+        completed: [Task]
     }
 
     type Mutation {
         createTask(title: String!): Task
+        deleteTask(id: ID!): Task
+        markDone(id: ID!): Task
     }
 `;
 
@@ -54,8 +57,36 @@ const resolvers = {
     DateTime: dateTimeScalar,
     Query: {
         async todo() {
-            return await prisma.task.findMany();
+            return await prisma.task.findMany({
+                where: {
+                    done: false
+                }
+            });
         },
+        async completed() {
+            let todayStart: Date = new Date();
+            let todayEnd: Date = new Date();
+
+            if (todayStart.getHours() < 7) { // You are in previous day
+                todayEnd.setHours(7)
+                todayStart.setDate(todayStart.getDate() - 1)
+            } else { // You are in current day
+                todayEnd.setDate(todayEnd.getDate() + 1)
+                todayEnd.setHours(7)
+            }
+
+            todayStart.setHours(7) // Day always starts at 7 AM
+
+            return await prisma.task.findMany({
+                where: {
+                    done: true,
+                    completedAt: {
+                        lte: todayEnd,
+                        gte: todayStart
+                    }
+                }
+            })
+        }
     },
     Mutation: {
         async createTask(_, { title }) {
@@ -64,7 +95,26 @@ const resolvers = {
                     title: title
                 }
             });
+        },
+        async deleteTask(_, { id }) {
+            return await prisma.task.delete({
+                where: {
+                    id: Number(id)
+                }
+            })
+        },
+        async markDone(_, { id }) {
+            return await prisma.task.update({
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    done: true,
+                    completedAt: new Date()
+                }
+            })
         }
+
     }
 };
 
