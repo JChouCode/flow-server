@@ -38,6 +38,7 @@ const typeDefs = `#graphql
         title: String!
         createdAt: DateTime!
         completedAt: DateTime
+        duration: Int
         done: Boolean!
     }
 
