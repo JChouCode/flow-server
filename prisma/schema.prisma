@@ -11,10 +11,11 @@ datasource db {
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.Text
-  createdAt   DateTime  @default(now())
-  completedAt DateTime?
-  duration    Int       @default(30) @db.SmallInt
-  done        Boolean   @default(false)
+  id        Int       @id @default(autoincrement())
+  title     String    @db.Text
+  createdAt DateTime  @default(now())
+  startAt   DateTime?
+  endAt     DateTime?
+  duration  Int       @default(30) @db.SmallInt
+  // done      Boolean   @default(false)
 }

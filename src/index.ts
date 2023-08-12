@@ -37,14 +37,13 @@ const typeDefs = `#graphql
         id: ID!
         title: String!
         createdAt: DateTime!
-        completedAt: DateTime
+        startAt: DateTime
+        endAt: DateTime
         duration: Int
-        done: Boolean!
     }
 
     type Query {
-        todo: [Task]
-        completed: [Task]
+        todoToday: [Task]
     }
 
     type Mutation {
@@ -57,37 +56,62 @@ const typeDefs = `#graphql
 const resolvers = {
     DateTime: dateTimeScalar,
     Query: {
-        async todo() {
-            return await prisma.task.findMany({
-                where: {
-                    done: false
-                }
-            });
+        async todoToday() {
+            // let todayStart: Date = new Date();
+            // let todayEnd: Date = new Date();
+
+            // if (todayStart.getHours() < 7) { // You are in previous day
+            //     todayEnd.setHours(7)
+            //     todayStart.setDate(todayStart.getDate() - 1)
+            // } else { // You are in current day
+            //     todayEnd.setDate(todayEnd.getDate() + 1)
+            //     todayEnd.setHours(7)
+            // }
+
+            // todayStart.setHours(7) // Day always starts at 7 AM
+
+            return await prisma.task.findMany();
+
+            // return await prisma.task.findMany({
+            //     where: {
+            //         OR: [
+            //             {
+            //                 startAt: null
+            //             },
+            //             {
+            //                 createdAt: {
+            //                     lte: todayEnd,
+            //                     gte: todayStart
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // });
         },
-        async completed() {
-            let todayStart: Date = new Date();
-            let todayEnd: Date = new Date();
+        // async completed() {
+        //     let todayStart: Date = new Date();
+        //     let todayEnd: Date = new Date();
 
-            if (todayStart.getHours() < 7) { // You are in previous day
-                todayEnd.setHours(7)
-                todayStart.setDate(todayStart.getDate() - 1)
-            } else { // You are in current day
-                todayEnd.setDate(todayEnd.getDate() + 1)
-                todayEnd.setHours(7)
-            }
+        //     if (todayStart.getHours() < 7) { // You are in previous day
+        //         todayEnd.setHours(7)
+        //         todayStart.setDate(todayStart.getDate() - 1)
+        //     } else { // You are in current day
+        //         todayEnd.setDate(todayEnd.getDate() + 1)
+        //         todayEnd.setHours(7)
+        //     }
 
-            todayStart.setHours(7) // Day always starts at 7 AM
+        //     todayStart.setHours(7) // Day always starts at 7 AM
 
-            return await prisma.task.findMany({
-                where: {
-                    done: true,
-                    completedAt: {
-                        lte: todayEnd,
-                        gte: todayStart
-                    }
-                }
-            })
-        }
+        //     return await prisma.task.findMany({
+        //         where: {
+        //             done: true,
+        //             completedAt: {
+        //                 lte: todayEnd,
+        //                 gte: todayStart
+        //             }
+        //         }
+        //     })
+        // }
     },
     Mutation: {
         async createTask(_, { title }) {
@@ -104,17 +128,17 @@ const resolvers = {
                 }
             })
         },
-        async markDone(_, { id }) {
-            return await prisma.task.update({
-                where: {
-                    id: Number(id)
-                },
-                data: {
-                    done: true,
-                    completedAt: new Date()
-                }
-            })
-        }
+        // async markDone(_, { id }) {
+        //     return await prisma.task.update({
+        //         where: {
+        //             id: Number(id)
+        //         },
+        //         data: {
+        //             done: true,
+        //             completedAt: new Date()
+        //         }
+        //     })
+        // }
 
     }
 };
