@@ -2,6 +2,9 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { GraphQLScalarType, Kind } from 'graphql';
 import { PrismaClient } from '@prisma/client'
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+
+
 
 const prisma = new PrismaClient()
 
@@ -146,6 +149,9 @@ const resolvers = {
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    plugins: [
+        ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+    ],
 });
 
 const { url } = await startStandaloneServer(server, {

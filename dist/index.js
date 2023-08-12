@@ -53,32 +53,32 @@ const resolvers = {
     DateTime: dateTimeScalar,
     Query: {
         async todoToday() {
-            let todayStart = new Date();
-            let todayEnd = new Date();
-            if (todayStart.getHours() < 7) { // You are in previous day
-                todayEnd.setHours(7);
-                todayStart.setDate(todayStart.getDate() - 1);
-            }
-            else { // You are in current day
-                todayEnd.setDate(todayEnd.getDate() + 1);
-                todayEnd.setHours(7);
-            }
-            todayStart.setHours(7); // Day always starts at 7 AM
-            return await prisma.task.findMany({
-                where: {
-                    OR: [
-                        {
-                            startAt: null
-                        },
-                        {
-                            createdAt: {
-                                lte: todayEnd,
-                                gte: todayStart
-                            }
-                        }
-                    ]
-                }
-            });
+            // let todayStart: Date = new Date();
+            // let todayEnd: Date = new Date();
+            // if (todayStart.getHours() < 7) { // You are in previous day
+            //     todayEnd.setHours(7)
+            //     todayStart.setDate(todayStart.getDate() - 1)
+            // } else { // You are in current day
+            //     todayEnd.setDate(todayEnd.getDate() + 1)
+            //     todayEnd.setHours(7)
+            // }
+            // todayStart.setHours(7) // Day always starts at 7 AM
+            return await prisma.task.findMany();
+            // return await prisma.task.findMany({
+            //     where: {
+            //         OR: [
+            //             {
+            //                 startAt: null
+            //             },
+            //             {
+            //                 createdAt: {
+            //                     lte: todayEnd,
+            //                     gte: todayStart
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // });
         },
         // async completed() {
         //     let todayStart: Date = new Date();
